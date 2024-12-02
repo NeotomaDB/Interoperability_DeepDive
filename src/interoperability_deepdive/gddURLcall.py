@@ -12,6 +12,7 @@ def gddURLcall(url: str, verbose = False) -> list:
         list: _A list of the full set of results from a single GDD call._
     """
     call = get(url, timeout=10)
+    outcome = []
     if call.status_code == 200:
         output = loads(call.content)
         maxhits = output.get('success').get('hits')
@@ -19,8 +20,6 @@ def gddURLcall(url: str, verbose = False) -> list:
             print(f"Returning a total of {maxhits}:")
         gddurl = output.get('success').get('next_page')
         outcome = process_hits(output.get('success').get('data'))
-    else:
-        raise 
     if gddurl != '':
         if verbose:
             print("Fetching next page.")
