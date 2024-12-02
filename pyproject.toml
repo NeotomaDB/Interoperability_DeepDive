@@ -8,6 +8,8 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "joblib>=1.4.2",
+    "networkx[default,extra]>=3.4.2",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
 ]
