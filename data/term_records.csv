@@ -2,12 +2,10 @@ African Pollen Database
 archeoViz
 ARIADNE
 ARIADNE Portal
-BIEN
 BioDeepTime
 BioTIME
 Botanical Information and Ecology Network
 Canadian Archaeological Radiocarbon Database
-CARD
 CHELSA
 CHELSA-TraCE21k
 Czech Quaternary Palynological Database
@@ -16,7 +14,6 @@ DINAA
 EUROEVOL
 European Pollen Database
 European Vegetation Archive
-EVA
 FAUNMAP
 FishBase
 Functional Trait Resource for Environmental Studies
@@ -29,55 +26,55 @@ Global Paleofire Database
 Global Vegetation Database
 GNIP
 GPD
-http://non-pollen-palynomorphs.uni-goettingen.de/
-http://openarchaeo.huma-num.fr/explorateur/home
-http://www.marspec.org/
-https://analytics.huma-num.fr/archeoviz/home/
-https://bien.nceas.ucsb.edu/bien/
-https://biodeeptime.github.io/
-https://biotime.st-andrews.ac.uk/
-https://botany.natur.cuni.cz/palycz/
-https://chelsa-climate.org/paleo-climate/
-https://core.tdar.org/
-https://discovery.ucl.ac.uk/id/eprint/1469811/
-https://doi.org/10.5281/zenodo.8136482
-https://doi.org/10.6084/m9.figshare.c.5242154.v3
-https://euroveg.org/eva-database/
-https://fishbase.se/home.php
-https://futres-data-interface.netlify.app/
-https://geology.er.usgs.gov/egpsc/prism/index.html
-https://macrostrat.org/
-https://nakala.fr/about
-https://neotomadb.org
-https://obis.org/
-https://octopusdata.org/
-https://opencontext.org/
-https://paleobiodb.org
-https://pastglobalchanges.org/publications/pages-magazines/pages-magazine/128661
-https://geology.er.usgs.gov/egpsc/prism/7.2_pliomip2_data.html
-https://phytolith.missouri.edu/
-https://researchdata.reading.ac.uk/256/
-https://varve.gfz-potsdam.de/
-https://vertnet.org
-https://www.arb-silva.de/
-https://www.ariadne-research-infrastructure.eu/
-https://www.biodiversity.be/5132/
-https://www.bodc.ac.uk/data/bodc_database/nodb/
-https://www.canadianarchaeology.ca/
-https://www.gbif.org/
-https://www.gbif.org/dataset/a779af82-1422-4b00-9e7f-8e1c1f07bea2
-https://www.iaea.org/services/networks/gnip
-https://www.idigbio.org
-https://www.idiv.de/en/splot.html
-https://www.marinespecies.org/
-https://www.ncei.noaa.gov/products/paleoclimatology
-https://www.neonscience.org/
-https://www.p3k14c.org/
-https://www.paleofire.org/
-https://www.phytcore.org/phytolith/index.php
-https://www.sead.se/
-https://www.try-db.org/TryWeb/Home.php
-https://www.worldclim.org/
+non-pollen-palynomorphs.uni-goettingen.de
+openarchaeo.huma-num.fr/explorateur/home
+www.marspec.org
+analytics.huma-num.fr/archeoviz/home
+bien.nceas.ucsb.edu/bien
+biodeeptime.github.io
+biotime.st-andrews.ac.uk
+botany.natur.cuni.cz/palycz
+chelsa-climate.org/paleo-climate
+core.tdar.org
+discovery.ucl.ac.uk/id/eprint/1469811
+doi.org/10.5281/zenodo.8136482
+doi.org/10.6084/m9.figshare.c.5242154.v3
+euroveg.org/eva-database
+fishbase.se/home.php
+futres-data-interface.netlify.app
+geology.er.usgs.gov/egpsc/prism/index.html
+macrostrat.org
+nakala.fr/about
+neotomadb.org
+obis.org
+octopusdata.org
+opencontext.org
+paleobiodb.org
+pastglobalchanges.org/publications/pages-magazines/pages-magazine/128661
+geology.er.usgs.gov/egpsc/prism/7.2_pliomip2_data.html
+phytolith.missouri.edu
+researchdata.reading.ac.uk/256
+varve.gfz-potsdam.de
+vertnet.org
+www.arb-silva.de
+www.ariadne-research-infrastructure.eu
+www.biodiversity.be/5132
+www.bodc.ac.uk/data/bodc_database/nodb
+www.canadianarchaeology.ca
+www.gbif.org
+www.gbif.org/dataset/a779af82-1422-4b00-9e7f-8e1c1f07bea2
+www.iaea.org/services/networks/gnip
+www.idigbio.org
+www.idiv.de/en/splot.html
+www.marinespecies.org
+www.ncei.noaa.gov/products/paleoclimatology
+www.neonscience.org
+www.p3k14c.org
+www.paleofire.org
+www.phytcore.org/phytolith
+www.sead.se
+www.try-db.org/TryWeb
+www.worldclim.org
 iDigBio
 Integrated Digitized Biocollections
 Latin American Pollen Database
@@ -91,7 +88,6 @@ National Ecological Observatory Network
 National Oceanographic Database
 NCBI
 NCEI Paleoclimatology Database
-NEON
 Neotoma
 Neotoma Paleoecology
 neotoma2
@@ -103,7 +99,6 @@ NOAA Paleoclimatology
 NOAA Paleoclimatology Database
 NOAA/WDS for Paleoclimatology
 NODB
-NODE
 Non-Pollen Palynomorph Image Database
 Nonmarine Ostracod Distribution in Europe
 North American Pollen Database
@@ -111,7 +106,6 @@ NPP-ID
 NSB
 OBIS
 Ocean Biodiversity Information System
-OCTOPUS
 Open Archaeo
 Open Context
 OpenContext
@@ -129,7 +123,6 @@ Pliocene Model Intercomparison Project
 PlioMIP2
 Pliocene Research Interpretation and Synoptic Mapping
 PlioMIP
-PRISM
 QMMDB
 Quaternary Mexican Mammal Database
 SEAD
@@ -141,9 +134,12 @@ Strategic Environmental Archaeology Database
 Old Wood in a New Light
 BugsCEP
 tDAR
+TRY Database
+rtry
+rgbif
+rfishbase
 The Digital Archaeological Record
 Triton
-TRY
 VARDA
 Varved Sediments Database
 VertNet
