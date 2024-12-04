@@ -1,124 +1,125 @@
-import networkx as nx
 import csv
 from itertools import combinations
 import matplotlib.pyplot as plt
+import networkx as nx
+from networkx.algorithms import bipartite
+from sknetwork.data import from_edge_list
+from sknetwork.clustering import Louvain
+from nxviz import CircosPlot, BasePlot
+import nxviz as nv
 import math
+import json
 
 G = nx.Graph()
 
-papers = []
-dbs = []
+with open('./data/doi_joined.json') as terms:
+    graph = json.load(terms)
 
-with open('./data/merged_records.csv', 'r', encoding='UTF-8') as terms:
-    reader = csv.reader(terms)
-    for i in reader:
-        dbs.append([j.strip() for j in i])
+graph = [i for i in graph if i['doi'] != '']
 
-with open('./data/repohits.csv', 'r', encoding='UTF-8') as file:
-    reader = csv.reader(file)
-    for i in reader:
-        db = [j[0] for j in dbs].index(i[3])
-        papers.append({'doi': i[0],
-                       'snippet': i[1],
-                       'title': i[2],
-                       'database': dbs[db][1]})
+dois = [i['doi'] for i in graph]
 
-# Remove all papers without a DOI:
-papers = [i for i in papers if i.get('doi') or '' != '']
-doi_list = [i.get('doi') for i in papers]
-doi_set = set(doi_list)
-doi_count = {i: doi_list.count(i) for i in doi_set if doi_list.count(i) > 1}
-clean_dois = set(doi_count.keys())
+resources = set()
 
-clean_papers = [i for i in papers if i.get('doi') in clean_dois]
+for i in graph:
+    for j in i['resources']:
+        resources.add(j)
 
-dataresources = set([i.get('database') for i in papers])
+G.add_nodes_from(dois, bipartite = 0)
+G.add_nodes_from(resources, bipartite = 1)
 
-G.add_nodes_from(dataresources)
-dois = []
+for i in graph:
+    for j in i['resources']:
+        G.add_edges_from([(i['doi'], j)])
 
-j = 0
+# We have a bipartite graph.
+nx.is_connected(G)
 
-for i in clean_papers:
-    j = j + 1
-    if i.get('doi') not in [i.get('doi') or '' for i in dois]:
-        dois.append({'doi': i.get('doi'), 'resource': set(i.get('database'))})
-    else:
-        doi_loc = [j.get('doi') for j in dois].index(i.get('doi'))
-        dois[doi_loc]['resource'].add(i.get('database'))
-    if j % 1000 == 0:
-        print(j)
+edge_list=[(e[0],e[1], 1) for e in G.edges(data=True)]
+bgraph = from_edge_list(edge_list, bipartite=True)
 
-for i in dois:
-    if len(i.get('resource')) > 1:
-        combs = list(combinations(i.get('resource'), 2))
-        for j in combs:
-            if j[0] != j[1]:
-                if j in G.edges:
-                    G.edges[j[0], j[1]]['weight'] = G.edges[j]['weight'] + 1
-                else:
-                    G.add_edge(j[0], j[1], weight = 1)
+names = bgraph.names
+names_row = bgraph.names_row
+names_col = bgraph.names_col
+biadjacency=bgraph.biadjacency
 
-weights = [math.sqrt(G[u][v]['weight']) for u,v in G.edges()]
+#Louvain with Barber modularity
+louvain = Louvain()
+louvain.fit(biadjacency,force_bipartite=True)
+labels_row = louvain.labels_row_
+labels_col = louvain.labels_col_
 
-subax1 = plt.subplot(111)
-nx.draw(G, nx.kamada_kawai_layout(G), with_labels=True, edge_color="tab:red", font_weight='bold')
+#Add the label to the graph
+partition={}
+for i,n_r in enumerate(names_row):
+    partition[n_r]=labels_row[i]
+for i,n_c in enumerate(names_col):
+    partition[n_c]=labels_col[i]
+    
+nx.set_node_attributes(G, partition, 'community_louvain')
+
+resource_nodes = [node for node in G.nodes() if G._node[node]['bipartite'] == 1]
+paper_nodes = [node for node in G.nodes() if G._node[node]['bipartite'] == 0]
+
+resource_centrality = [node for node in nx.bipartite.degree_centrality(G, resource_nodes).items() if not node[0].startswith("1")]
+
+sorted(resource_centrality, key=lambda x: x[1], reverse=True)[:5]
+
+resource_graph = nx.bipartite.projection.projected_graph(G, resource_nodes)
+
+for n, d in resource_graph.nodes(data=True):
+    resource_graph._node[n]['neighbors_count'] = len(list(resource_graph.neighbors(n)))
+
+options = {"edgecolors": "tab:gray", "node_size": 700, "alpha": 0.7}
+label_options = {"ec": "k", "fc": "white", "alpha": 0.7}
+
+pos = nx.spring_layout(resource_graph, seed=3113794652)  # positions for all nodes
+
+fig = plt.figure(figsize=(6, 9))
+
+nx.draw_networkx_edges(resource_graph, pos, alpha = 0.1)
+nx.draw_networkx_nodes(resource_graph, pos, **options)
+nx.draw_networkx_labels(resource_graph, pos, font_size=14, bbox=label_options)
 plt.show()
 
-# Betweenness
-# remove randomly selected nodes (to make example fast)
-# largest connected component
-components = nx.connected_components(G)
-largest_component = max(components, key=len)
-H = G.subgraph(largest_component)
 
-# compute centrality
-centrality = nx.betweenness_centrality(G, endpoints=True, weight = 'weight')
+# function to create node colour list
+def create_community_node_colors(graph, communities):
+    number_of_colors = len(communities)
+    colors = ["#D4FCB1", "#CDC5FC", "#FFC2C4", "#F2D140", "#BCC6C8"][:number_of_colors]
+    node_colors = []
+    for node in graph:
+        current_community_index = 0
+        for community in communities:
+            if node in community:
+                node_colors.append(colors[current_community_index])
+                break
+            current_community_index += 1
+    return node_colors
 
-# compute community structure
-lpc = nx.community.label_propagation_communities(G)
-community_index = {n: i for i, com in enumerate(lpc) for n in com}
 
-#### draw graph ####
-fig, ax = plt.subplots(figsize=(20, 15))
-pos = nx.spring_layout(G, k=0.15, seed=4572321)
-node_color = [community_index[n] for n in G]
-node_size = [v * 20000 for v in centrality.values()]
-nx.draw_networkx(
-    G,
-    pos=pos,
-    with_labels=False,
-    node_color=node_color,
-    node_size=node_size,
-    edge_color="gainsboro",
-    alpha=0.4,
-)
+# function to plot graph with node colouring based on communities
+def visualize_communities(graph, communities, i):
+    node_colors = create_community_node_colors(graph, communities)
+    modularity = round(nx.community.modularity(graph, communities), 6)
+    title = f"Community Visualization of {len(communities)} communities with modularity of {modularity}"
+    pos = nx.spring_layout(graph, k=0.3, iterations=50, seed=2)
+    plt.subplot(3, 1, i)
+    plt.title(title)
+    nx.draw(
+        graph,
+        pos=pos,
+        node_size=1000,
+        node_color=node_colors,
+        with_labels=True,
+        font_size=20,
+        font_color="black",
+    )
 
-# Title/legend
-font = {"color": "k", "fontweight": "bold", "fontsize": 20}
-ax.set_title("Gene functional association network (C. elegans)", font)
-# Change font color for legend
-font["color"] = "r"
 
-ax.text(
-    0.80,
-    0.10,
-    "node color = community structure",
-    horizontalalignment="center",
-    transform=ax.transAxes,
-    fontdict=font,
-)
-ax.text(
-    0.80,
-    0.06,
-    "node size = betweenness centrality",
-    horizontalalignment="center",
-    transform=ax.transAxes,
-    fontdict=font,
-)
+communities = list(nx.algorithms.community.girvan_newman(resource_graph))
 
-# Resize figure for label readability
-ax.margins(0.1, 0.05)
-fig.tight_layout()
-plt.axis("off")
+# Plot graph with colouring based on communities
+visualize_communities(resource_graph, communities[0], 1)
+visualize_communities(resource_graph, communities[3], 2)
 plt.show()
