@@ -4,14 +4,16 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "Simon", email = "simon.j.goring@gmail.com" }
+    { name = "Simon Goring", email = "simon.j.goring@gmail.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
     "joblib>=1.4.2",
     "networkx[default,extra]>=3.4.2",
+    "nxviz>=0.7.4",
     "python-dotenv>=1.0.1",
     "requests>=2.32.3",
+    "scikit-network>=0.33.1",
 ]
 
 [project.scripts]
