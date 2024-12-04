@@ -1,14 +1,11 @@
-import csv
-from itertools import combinations
 import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.algorithms import bipartite
 from sknetwork.data import from_edge_list
 from sknetwork.clustering import Louvain
-from nxviz import CircosPlot, BasePlot
 import nxviz as nv
-import math
 import json
+import math
 
 G = nx.Graph()
 
@@ -25,8 +22,8 @@ for i in graph:
     for j in i['resources']:
         resources.add(j)
 
-G.add_nodes_from(dois, bipartite = 0)
-G.add_nodes_from(resources, bipartite = 1)
+G.add_nodes_from(dois, bipartite = "publications")
+G.add_nodes_from(resources, bipartite = "resources")
 
 for i in graph:
     for j in i['resources']:
@@ -58,14 +55,14 @@ for i,n_c in enumerate(names_col):
     
 nx.set_node_attributes(G, partition, 'community_louvain')
 
-resource_nodes = [node for node in G.nodes() if G._node[node]['bipartite'] == 1]
-paper_nodes = [node for node in G.nodes() if G._node[node]['bipartite'] == 0]
+resource_nodes = [node for node in G.nodes() if G._node[node]['bipartite'] == 'resources']
+paper_nodes = [node for node in G.nodes() if G._node[node]['bipartite'] == 'publications']
 
 resource_centrality = [node for node in nx.bipartite.degree_centrality(G, resource_nodes).items() if not node[0].startswith("1")]
 
 sorted(resource_centrality, key=lambda x: x[1], reverse=True)[:5]
 
-resource_graph = nx.bipartite.projection.projected_graph(G, resource_nodes)
+resource_graph = nx.bipartite.projection.weighted_projected_graph(G, resource_nodes)
 
 for n, d in resource_graph.nodes(data=True):
     resource_graph._node[n]['neighbors_count'] = len(list(resource_graph.neighbors(n)))
@@ -73,11 +70,12 @@ for n, d in resource_graph.nodes(data=True):
 options = {"edgecolors": "tab:gray", "node_size": 700, "alpha": 0.7}
 label_options = {"ec": "k", "fc": "white", "alpha": 0.7}
 
-pos = nx.spring_layout(resource_graph, seed=3113794652)  # positions for all nodes
+pos = nx.kamada_kawai_layout(resource_graph, weight = 'weight', scale = 10)  # positions for all nodes
+weights = [math.sqrt(i) for i in nx.get_edge_attributes(resource_graph, 'weight').values()]
 
 fig = plt.figure(figsize=(6, 9))
 
-nx.draw_networkx_edges(resource_graph, pos, alpha = 0.1)
+nx.draw_networkx_edges(resource_graph, pos, width= weights, alpha = 0.1)
 nx.draw_networkx_nodes(resource_graph, pos, **options)
 nx.draw_networkx_labels(resource_graph, pos, font_size=14, bbox=label_options)
 plt.show()
