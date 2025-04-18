@@ -1,3 +1,9 @@
+<!-- badges: start -->
+
+![lifecycle](https://img.shields.io/badge/lifecycle-active-orange.svg)
+<!-- badges: end -->
+
+
 # Examining Interoperability Among Databases
 
 This project leverage xDeepDive to understand the intersection between existing paleo-data community resources such as the Neotoma Paleoecology Database, Global Paleofire Database or WorldClim. We use a list of terms compiled from researcher interviews that indicate likely sources of data used by researchers working in Holocene/Quaternary studies across a range of disciplines. Included in this set of terms are various tools associated with these different data resources.
